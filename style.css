@@ -98,7 +98,6 @@ body::before {
 
 /* Ховеры для ПК */
 @media (hover: hover) {
-    * { cursor: none !important; } .custom-cursor { display: block; }
     .link-item:hover { transform: translateY(-3px); background: rgba(255,255,255,0.05); border-color: var(--neon-cyan); box-shadow: 0 8px 20px rgba(0, 242, 254, 0.15); }
     .link-item:hover .icon { transform: scale(1.1); filter: drop-shadow(0 0 6px var(--neon-cyan)); }
     .link-item:hover .arrow { color: #fff; transform: translateX(4px); }
