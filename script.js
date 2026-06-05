@@ -18,10 +18,10 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
-// СВЕРХСКОРОСТНОЙ ДВИЖОК: Коэффициент 0.80 убирает медлительность и дает моментальный отклик
+// СВЕРХСКОРОСТНОЙ ДВИЖОК: Коэффициент 0.20 убирает медлительность и дает моментальный отклик
 function animateCursor() {
-    cursorX += (mouseX - cursorX) * 0.80; 
-    cursorY += (mouseY - cursorY) * 0.80;
+    cursorX += (mouseX - cursorX) * 0.20; 
+    cursorY += (mouseY - cursorY) * 0.20;
 
     if (cursor && window.innerWidth >= 768) {
         cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
