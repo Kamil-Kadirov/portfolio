@@ -13,7 +13,7 @@
     --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Скрываем дефолтную мышь на ПК для идеального кастомного курсора */
+/* Скрываем дефолтную мышь на ПК для работы оригинального кастомного курсора */
 @media (hover: hover) {
     * { cursor: none !important; }
 }
@@ -29,18 +29,19 @@ body {
     overflow-x: hidden; position: relative;
 }
 
-/* 5. ИНТЕРАКТИВНАЯ ТЕКСТУРА ЖУРНАЛЬНОГО ШУМА (GRAIN) */
+/* ИНТЕРАКТИВНАЯ ТЕКСТУРА ЖУРНАЛЬНОГО ШУМА (GRAIN) */
 body::before {
     content: ''; position: absolute; inset: 0; 
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://w3.org id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     opacity: 0.03; pointer-events: none; z-index: 2;
 }
 
-/* ТО САМОЕ КРУТОЕ БИРЮЗОВОЕ КОЛЬЦО ИЗ ПЕРВОЙ ВЕРСИИ (ПОЧИНЕННОЕ) */
+/* ТО САМОЕ ОРИГИНАЛЬНОЕ БИРЮЗОВОЕ ПОЛУПРОЗРАЧНОЕ КОЛЬЦО */
 .custom-cursor {
     width: 20px;
     height: 20px;
     border: 2px solid var(--neon-cyan);
+    background-color: transparent; /* Никакой инверсии, чистый минимализм */
     border-radius: 50%;
     position: fixed;
     top: 0;
@@ -48,16 +49,17 @@ body::before {
     pointer-events: none;
     z-index: 99999;
     opacity: 0;
-    /* Изменение размеров и цвета */
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
     transition: width 0.3s var(--transition), height 0.3s var(--transition), border-color 0.3s ease, background-color 0.3s ease, opacity 0.3s ease;
     will-change: transform;
 }
-/* Эффект магнита/расширения при наведении на кнопки */
+/* Ховер-эффект первой версии: расширяется и становится ярче */
 .custom-cursor.hovered {
-    width: 44px;
-    height: 44px;
-    border-color: var(--neon-pink);
-    background-color: rgba(255, 0, 127, 0.05);
+    width: 40px;
+    height: 40px;
+    border-color: rgba(0, 242, 254, 1);
+    background-color: rgba(0, 242, 254, 0.07);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
 }
 
 .bg-glow { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3; z-index: 0; pointer-events: none; }
