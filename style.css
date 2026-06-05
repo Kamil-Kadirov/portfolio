@@ -39,7 +39,7 @@ body::before {
     opacity: 0.025; pointer-events: none; z-index: 2;
 }
 
-/* ТОЧНАЯ НАСТРОЙКА КУРСОРA (МГНОВЕННЫЙ ПОЛЕТ + МЕДЛЕННЫЙ ХОВЕР) */
+/* ФИКС СЕНЬОРА: ТОЧНАЯ НАСТРОЙКА КУРСОРA (МГНОВЕННЫЙ ПОЛЕТ + МЕДЛЕННЫЙ ХОВЕР) */
 .custom-cursor {
     width: 18px; 
     height: 18px;
@@ -54,7 +54,9 @@ body::before {
     opacity: 0;
     box-shadow: 0 0 8px rgba(0, 242, 254, 0.15);
     
-    /* Фикс: убрали трансформацию из transition, чтобы JS-код управлял плавностью шлейфа! */
+    /* Мы полностью убрали отсюда переменную var(--transition).
+       Теперь плавно меняются ТОЛЬКО размеры и цвет (за 0.4 секунды), 
+       а перемещение (transform) не имеет никаких CSS-задержек и слушается только JS! */
     transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
                 height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
                 background-color 0.4s ease, 
