@@ -10,10 +10,10 @@
     --accent-gradient: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-pink) 100%);
     --font-sans: 'Inter', sans-serif;
     --font-heading: 'Syne', sans-serif;
-    --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Скрываем дефолтную мышь на ПК для работы оригинального кастомного курсора */
+/* Скрываем дефолтную мышь на ПК для работы кастомного курсора */
 @media (hover: hover) {
     * { cursor: none !important; }
 }
@@ -29,19 +29,19 @@ body {
     overflow-x: hidden; position: relative;
 }
 
-/* ИНТЕРАКТИВНАЯ ТЕКСТУРА ЖУРНАЛЬНОГО ШУМА (GRAIN) */
+/* ЖУРНАЛЬНЫЙ ЦИФРОВОЙ ШУМ (GRAIN) */
 body::before {
     content: ''; position: absolute; inset: 0; 
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://w3.org id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     opacity: 0.03; pointer-events: none; z-index: 2;
 }
 
-/* ТО САМОЕ ОРИГИНАЛЬНОЕ БИРЮЗОВОЕ ПОЛУПРОЗРАЧНОЕ КОЛЬЦО */
+/* ОРИГИНАЛЬНОЕ БИРЮЗОВОЕ ПОЛУПРОЗРАЧНОЕ КОЛЬЦО КУРСОРA */
 .custom-cursor {
     width: 20px;
     height: 20px;
     border: 2px solid var(--neon-cyan);
-    background-color: transparent; /* Никакой инверсии, чистый минимализм */
+    background-color: transparent;
     border-radius: 50%;
     position: fixed;
     top: 0;
@@ -53,7 +53,6 @@ body::before {
     transition: width 0.3s var(--transition), height 0.3s var(--transition), border-color 0.3s ease, background-color 0.3s ease, opacity 0.3s ease;
     will-change: transform;
 }
-/* Ховер-эффект первой версии: расширяется и становится ярче */
 .custom-cursor.hovered {
     width: 40px;
     height: 40px;
@@ -62,21 +61,26 @@ body::before {
     box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
 }
 
+/* Пульсирующие фоновые сферы бэкграунда */
 .bg-glow { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3; z-index: 0; pointer-events: none; }
 .blob-1 { width: 400px; height: 400px; background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink)); top: -10%; left: -10%; animation: f1 15s infinite alternate ease-in-out; }
 .blob-2 { width: 500px; height: 500px; background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple)); bottom: -10%; right: -10%; animation: f2 12s infinite alternate ease-in-out; }
 @keyframes f1 { to { transform: translate(80px, 50px) scale(1.2); } }
 @keyframes f2 { to { transform: translate(-60px, -80px) scale(0.9); } }
 
-/* Стеклянная карточка кибер-глассморфизма */
+/* Стеклянная карточка — ТЕПЕРЬ МОНОЛИТНАЯ И СТАБИЛЬНАЯ */
 .card-container {
     background: var(--card-bg); border: 1px solid var(--card-border); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
     border-radius: 32px; padding: 40px 24px; width: 100%; max-width: 400px; text-align: center; z-index: 3;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     position: relative; overflow: hidden;
+    
+    /* Анимация проявления из тумана при старте */
+    opacity: 0; transform: scale(0.95); animation: cardIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+@keyframes cardIn { to { opacity: 1; transform: scale(1); } }
 
-/* Интерактивный неоновый блик, который бегает под стеклом */
+/* Интерактивный неоновый блик, который бегает под стеклом за мышкой */
 .card-container::before {
     content: ''; position: absolute; inset: 0; background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 242, 254, 0.08), transparent 80%);
     z-index: -1; opacity: 0; transition: opacity 0.5s ease; pointer-events: none;
@@ -91,7 +95,7 @@ body::before {
 .profile-name { font-family: var(--font-heading); font-size: 28px; font-weight: 800; margin-bottom: 12px; background: linear-gradient(135deg, #ffffff 30%, var(--neon-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 8px rgba(0, 242, 254, 0.2)); }
 .profile-bio { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
 
-/* Кнопки в стиле неоновых кибер-панелей */
+/* Кнопки */
 .links-section { display: flex; flex-direction: column; gap: 16px; }
 .link-item {
     display: flex; justify-content: space-between; align-items: center; padding: 18px 24px;
@@ -109,7 +113,7 @@ body::before {
 .primary-link { background: rgba(121, 40, 202, 0.2); border: 1px solid var(--neon-purple); box-shadow: 0 4px 15px rgba(121, 40, 202, 0.15); }
 .primary-link .icon { color: var(--neon-pink); }
 
-/* Портфолио */
+/* Галерея портфолио */
 .gallery-section { text-align: left; margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 24px; }
 .gallery-title { font-family: var(--font-heading); font-size: 16px; font-weight: 700; margin-bottom: 14px; color: #fff; letter-spacing: 0.5px; }
 .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -121,11 +125,11 @@ body::before {
 .lightbox-img { max-width: 90%; max-height: 85%; border-radius: 16px; transform: scale(0.9); transition: transform 0.4s; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
 .lightbox.active .lightbox-img { transform: scale(1); }
 
-/* Каскадная 3D-анимация появления */
+/* 3D Каскадное появление элементов */
 .fade-in { opacity: 0; transform: perspective(600px) rotateX(-15deg) translateY(25px); filter: blur(4px); animation: elIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; animation-delay: calc(0.2s + (var(--i) * 0.08s)); }
 @keyframes elIn { to { opacity: 1; transform: perspective(600px) rotateX(0deg) translateY(0); filter: blur(0); } }
 
-/* Наведения */
+/* Мягкие ховер-эффекты для кнопок (сама карточка не двигается) */
 @media (hover: hover) {
     .link-item:hover { transform: translateY(-4px) scale(1.02); background: rgba(255, 255, 255, 0.05); border-color: var(--neon-cyan); box-shadow: 0 10px 25px rgba(0, 242, 254, 0.2); }
     .link-item:hover .icon { transform: rotate(-8deg) scale(1.1); filter: drop-shadow(0 0 8px var(--neon-cyan)); }
