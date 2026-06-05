@@ -1,7 +1,7 @@
 :root {
     --bg-color: #040406;
-    --card-bg: rgba(12, 12, 20, 0.5);
-    --card-border: rgba(255, 255, 255, 0.1);
+    --card-bg: rgba(12, 12, 20, 0.55);
+    --card-border: rgba(255, 255, 255, 0.08);
     --text-main: #ffffff;
     --text-muted: #9499a6;
     --neon-pink: #ff007f;
@@ -24,30 +24,6 @@ body {
     overflow-x: hidden; position: relative;
 }
 
-/* ПОЧИНЕННЫЙ КАСТОМНЫЙ КУРСОР */
-.custom-cursor {
-    width: 24px;
-    height: 24px;
-    border: 2px solid var(--neon-cyan);
-    border-radius: 50%;
-    position: fixed;
-    top: 0; /* Фикс застревания */
-    left: 0; /* Фикс застревания */
-    transform: translate(-50%, -50%);
-    pointer-events: none; /* Чтобы сквозь круг можно было кликать */
-    z-index: 9999;
-    opacity: 0;
-    /* Плавное следование (эффект шлейфа) */
-    transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1), width 0.3s, height 0.3s, background-color 0.3s, opacity 0.3s;
-}
-/* Эффект расширения при наведении на кнопки */
-.custom-cursor.hovered {
-    width: 44px;
-    height: 44px;
-    background: rgba(0, 242, 254, 0.1);
-    border-color: var(--neon-pink);
-}
-
 body::before {
     content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://w3.org id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     opacity: 0.02; pointer-events: none; z-index: 2;
@@ -58,13 +34,22 @@ body::before {
 @keyframes f1 { to { transform: translate(50px, 30px) scale(1.1); } }
 @keyframes f2 { to { transform: translate(-40px, -40px) scale(0.9); } }
 
+/* Стеклянная карточка с динамическим неоновым ореолом мыши */
 .card-container {
     background: var(--card-bg); border: 1px solid var(--card-border); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-    border-radius: 28px; padding: 36px 20px; width: 100%; max-width: 410px; text-align: center; z-index: 3;
+    border-radius: 28px; padding: 40px 24px; width: 100%; max-width: 410px; text-align: center; z-index: 3;
     box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
     opacity: 0; transform: scale(0.95); animation: cardIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    position: relative; overflow: hidden;
 }
 @keyframes cardIn { to { opacity: 1; transform: scale(1); } }
+
+/* Магическое неоновое свечение ПОД стеклом, которое ходит за мышкой */
+.card-container::before {
+    content: ''; position: absolute; inset: 0; background: radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 242, 254, 0.08), transparent 80%);
+    z-index: -1; opacity: 0; transition: opacity 0.5s ease; pointer-events: none;
+}
+.card-container:hover::before { opacity: 1; }
 
 .profile-header { margin-bottom: 24px; }
 .avatar-wrapper { position: relative; width: 100px; height: 100px; margin: 0 auto 16px; padding: 3px; background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan)); border-radius: 50%; }
