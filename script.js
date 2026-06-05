@@ -4,13 +4,11 @@ const cursor = document.querySelector('.custom-cursor');
 let mouseX = 0, mouseY = 0;
 let cursorX = 0, cursorY = 0;
 
-// Отслеживание движения мыши
 document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
     if (cursor) cursor.style.opacity = '1';
 
-    // Карточка больше НЕ ПОВОРАЧИВАЕТСЯ. Мы только двигаем неоновый блик под стеклом
     if (window.innerWidth >= 768 && card) {
         const rect = card.getBoundingClientRect();
         const x = e.pageX - rect.left - window.scrollX;
@@ -20,10 +18,10 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
-// Плавный игровой цикл анимации бирюзового кольца (LERP)
+// Ускоренный цикл анимации курсора (LERP коэффициент изменен на 0.28 для скорости)
 function animateCursor() {
-    cursorX += (mouseX - cursorX) * 0.16;
-    cursorY += (mouseY - cursorY) * 0.16;
+    cursorX += (mouseX - cursorX) * 0.28; 
+    cursorY += (mouseY - cursorY) * 0.28;
 
     if (cursor && window.innerWidth >= 768) {
         cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
@@ -32,12 +30,10 @@ function animateCursor() {
 }
 requestAnimationFrame(animateCursor);
 
-// Сброс при уходе мыши из окна
 document.addEventListener('mouseleave', () => {
     if (cursor) cursor.style.opacity = '0';
 });
 
-// Магнитное увеличение курсора при наведении на кнопки
 const interactiveElements = document.querySelectorAll('a, button, .gallery-item');
 interactiveElements.forEach(el => {
     el.addEventListener('mouseenter', () => { if (cursor) cursor.classList.add('hovered'); });
