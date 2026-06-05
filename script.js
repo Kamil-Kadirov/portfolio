@@ -18,10 +18,10 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
-// Ускоренный цикл анимации курсора (LERP коэффициент изменен на 0.28 для скорости)
+// СВЕРХСКОРОСТНОЙ ДВИЖОК: Коэффициент 0.70 убирает медлительность и дает моментальный отклик
 function animateCursor() {
-    cursorX += (mouseX - cursorX) * 0.28; 
-    cursorY += (mouseY - cursorY) * 0.28;
+    cursorX += (mouseX - cursorX) * 0.70; 
+    cursorY += (mouseY - cursorY) * 0.70;
 
     if (cursor && window.innerWidth >= 768) {
         cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
