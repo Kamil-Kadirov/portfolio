@@ -51,14 +51,14 @@ body::before {
     opacity: 0;
     box-shadow: 0 0 8px rgba(0, 242, 254, 0.15);
     
-    /* КРИТИЧЕСКИЙ ФИКС: Анимируем только размеры, прозрачность и тень МЕДЛЕННО и ПЛАВНО. 
-       Свойство transform (перемещение) сюда не пишем, чтобы не тормозить мышь в JS! */
-    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                height 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-                background-color 0.5s ease, 
-                border-color 0.5s ease, 
-                opacity 0.3s ease, 
-                box-shadow 0.5s ease;
+    /* ФИКС: Убираем из transition любые намёки на изменение координат, 
+       чтобы JS-код наконец-то смог управлять плавностью шлейфа! */
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.4s ease, 
+                border-color 0.4s ease, 
+                opacity 0.2s ease, 
+                box-shadow 0.4s ease;
     will-change: transform;
 }
 
