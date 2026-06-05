@@ -13,6 +13,7 @@
     --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Скрываем дефолтную мышь на ПК для работы кастомного курсора */
 @media (hover: hover) {
     * { cursor: none !important; }
 }
@@ -28,30 +29,49 @@ body {
     overflow-x: hidden; position: relative;
 }
 
-/* ЦИФРОВОЙ ШУМ (GRAIN) */
+/* ЦИФРОВОЙ ЖУРНАЛЬНЫЙ ШУМ (GRAIN) */
 body::before {
     content: ''; position: absolute; inset: 0; 
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://w3.org id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     opacity: 0.025; pointer-events: none; z-index: 2;
 }
 
-/* БИРЮЗОВОЕ КОЛЬЦО КУРСОРA */
+/* ТОЧНАЯ НАСТРОЙКА КУРСОРA (МГНОВЕННЫЙ ПОЛЕТ + МЕДЛЕННЫЙ ХОВЕР) */
 .custom-cursor {
-    width: 18px; height: 18px;
+    width: 18px; 
+    height: 18px;
     border: 2px solid var(--neon-cyan);
-    background-color: transparent; border-radius: 50%;
-    position: fixed; top: 0; left: 0; pointer-events: none; z-index: 99999; opacity: 0;
+    background-color: transparent; 
+    border-radius: 50%;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    pointer-events: none; 
+    z-index: 99999; 
+    opacity: 0;
     box-shadow: 0 0 8px rgba(0, 242, 254, 0.15);
-    transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, background-color 0.25s ease, opacity 0.25s ease;
+    
+    /* КРИТИЧЕСКИЙ ФИКС: Анимируем только размеры, прозрачность и тень МЕДЛЕННО и ПЛАВНО. 
+       Свойство transform (перемещение) сюда не пишем, чтобы не тормозить мышь в JS! */
+    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                height 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.5s ease, 
+                border-color 0.5s ease, 
+                opacity 0.3s ease, 
+                box-shadow 0.5s ease;
     will-change: transform;
 }
+
+/* Медленное, вальяжное расширение при наведении на кнопки */
 .custom-cursor.hovered {
-    width: 36px; height: 36px;
+    width: 44px; 
+    height: 44px;
     border-color: var(--neon-cyan);
-    background-color: rgba(0, 242, 254, 0.05);
-    box-shadow: 0 0 12px rgba(0, 242, 254, 0.3);
+    background-color: rgba(0, 242, 254, 0.04);
+    box-shadow: 0 0 16px rgba(0, 242, 254, 0.35);
 }
 
+/* Пульсирующие фоновые сферы бэкграунда */
 .bg-glow { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.25; z-index: 0; pointer-events: none; }
 .blob-1 { width: 350px; height: 350px; background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink)); top: -5%; left: -5%; animation: f1 12s infinite alternate ease-in-out; }
 .blob-2 { width: 400px; height: 400px; background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple)); bottom: -5%; right: -5%; animation: f2 10s infinite alternate ease-in-out; }
@@ -72,6 +92,7 @@ body::before {
 }
 @keyframes cardIn { to { opacity: 1; transform: scale(1); } }
 
+/* Интерактивный неоновый блик, который бегает под стеклом за мышкой */
 .card-container::before {
     content: ''; position: absolute; inset: 0; background: radial-gradient(250px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 242, 254, 0.06), transparent 80%);
     z-index: -1; opacity: 0; transition: opacity 0.5s ease; pointer-events: none;
@@ -88,7 +109,7 @@ body::before {
 
 .links-section { display: flex; flex-direction: column; gap: 10px; }
 .link-item {
-    display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; /* Чуть тоньше кнопки */
+    display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; /* Кнопки стали аккуратнее */
     background: rgba(255, 255, 255, 0.015); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 14px;
     color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 14px; position: relative; overflow: hidden; transition: var(--transition);
 }
@@ -103,20 +124,24 @@ body::before {
 .primary-link { background: rgba(121, 40, 202, 0.15); border: 1px solid var(--neon-purple); box-shadow: 0 4px 12px rgba(121, 40, 202, 0.1); }
 .primary-link .icon { color: var(--neon-pink); }
 
+/* Компактная галерея */
 .gallery-section { text-align: left; margin-top: 16px; border-top: 1px solid var(--card-border); padding-top: 20px; }
 .gallery-title { font-family: var(--font-heading); font-size: 14px; font-weight: 700; margin-bottom: 12px; color: #fff; letter-spacing: 0.5px; }
 .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .gallery-item { aspect-ratio: 1; border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border); transition: var(--transition); }
 .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
 
+/* Просмотр портфолио */
 .lightbox { position: fixed; inset: 0; background: rgba(2,2,4,0.95); backdrop-filter: blur(12px); z-index: 99999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
 .lightbox.active { pointer-events: auto; opacity: 1; }
 .lightbox-img { max-width: 90%; max-height: 85%; border-radius: 12px; transform: scale(0.95); transition: transform 0.35s; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
 .lightbox.active .lightbox-img { transform: scale(1); }
 
+/* 3D Каскадное появление */
 .fade-in { opacity: 0; transform: perspective(500px) rotateX(-10deg) translateY(15px); filter: blur(2px); animation: elIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(0.15s + (var(--i) * 0.06s)); }
 @keyframes elIn { to { opacity: 1; transform: perspective(500px) rotateX(0deg) translateY(0); filter: blur(0); } }
 
+/* Мягкие ховеры для ПК */
 @media (hover: hover) {
     .link-item:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.04); border-color: var(--neon-cyan); box-shadow: 0 6px 15px rgba(0, 242, 254, 0.15); }
     .link-item:hover .icon { transform: rotate(-4deg) scale(1.05); filter: drop-shadow(0 0 6px var(--neon-cyan)); }
