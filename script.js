@@ -1,23 +1,20 @@
 const card = document.querySelector('.card-container');
 const cursor = document.querySelector('.custom-cursor');
 
-// Переменные для сглаженного движения курсора (математика lerp)
 let mouseX = 0, mouseY = 0;
 let cursorX = 0, cursorY = 0;
 
-// Отслеживаем физические координаты мыши
+// Отслеживание мыши и 3D-наклон
 document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
     if (cursor) cursor.style.opacity = '1';
 
-    // 3D-наклон матовой карточки
     if (window.innerWidth >= 768 && card) {
         const xAxis = (window.innerWidth / 2 - e.pageX) / 35;
         const yAxis = (window.innerHeight / 2 - e.pageY) / 35;
         card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
 
-        // Внутренний неоновый блик
         const rect = card.getBoundingClientRect();
         const x = e.pageX - rect.left - window.scrollX;
         const y = e.pageY - rect.top - window.scrollY;
@@ -26,11 +23,10 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
-// Игровой цикл анимации курсора без лагов (RequestAnimationFrame)
+// Плавный игровой цикл анимации бирюзового кольца (LERP)
 function animateCursor() {
-    // 0.15 — коэффициент плавности (чем меньше, тем благороднее шлейф круга)
-    cursorX += (mouseX - cursorX) * 0.15;
-    cursorY += (mouseY - cursorY) * 0.15;
+    cursorX += (mouseX - cursorX) * 0.16; // 0.16 — скорость шлейфа кольца
+    cursorY += (mouseY - cursorY) * 0.16;
 
     if (cursor && window.innerWidth >= 768) {
         cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
@@ -39,7 +35,6 @@ function animateCursor() {
 }
 requestAnimationFrame(animateCursor);
 
-// Сброс наклона при уходе мыши
 document.addEventListener('mouseleave', () => {
     if (card) {
         card.style.transition = 'all 0.5s ease';
@@ -48,7 +43,7 @@ document.addEventListener('mouseleave', () => {
     if (cursor) cursor.style.opacity = '0';
 });
 
-// Эффект магнита/увеличения круга
+// Магнитное увеличение курсора при наведении
 const interactiveElements = document.querySelectorAll('a, button, .gallery-item');
 interactiveElements.forEach(el => {
     el.addEventListener('mouseenter', () => { if (cursor) cursor.classList.add('hovered'); });
