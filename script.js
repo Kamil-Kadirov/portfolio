@@ -18,10 +18,13 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
-// СВЕРХСКОРОСТНОЙ ДВИЖОК: Коэффициент 0.20 убирает медлительность и дает моментальный отклик
+// ТОЧНЫЙ КИНЕМАТОГРАФИЧНЫЙ ЦИКЛ АНИМАЦИИ КУРСОРA
 function animateCursor() {
-    cursorX += (mouseX - cursorX) * 0.20; 
-    cursorY += (mouseY - cursorY) * 0.20;
+    /* Коэффициент 0.12 дает идеальный, благородный шлейф. 
+       Если захотите сделать круг ЕЩЁ более плавным и медленным — поставьте 0.08.
+       Если захотите сделать его быстрее — поставьте 0.2 */
+    cursorX += (mouseX - cursorX) * 0.12; 
+    cursorY += (mouseY - cursorY) * 0.12;
 
     if (cursor && window.innerWidth >= 768) {
         cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
