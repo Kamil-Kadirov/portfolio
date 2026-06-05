@@ -4,17 +4,14 @@ const cursor = document.querySelector('.custom-cursor');
 let mouseX = 0, mouseY = 0;
 let cursorX = 0, cursorY = 0;
 
-// Отслеживание мыши и 3D-наклон
+// Отслеживание движения мыши
 document.addEventListener('mousemove', (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
     if (cursor) cursor.style.opacity = '1';
 
+    // Карточка больше НЕ ПОВОРАЧИВАЕТСЯ. Мы только двигаем неоновый блик под стеклом
     if (window.innerWidth >= 768 && card) {
-        const xAxis = (window.innerWidth / 2 - e.pageX) / 35;
-        const yAxis = (window.innerHeight / 2 - e.pageY) / 35;
-        card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-
         const rect = card.getBoundingClientRect();
         const x = e.pageX - rect.left - window.scrollX;
         const y = e.pageY - rect.top - window.scrollY;
@@ -25,7 +22,7 @@ document.addEventListener('mousemove', (e) => {
 
 // Плавный игровой цикл анимации бирюзового кольца (LERP)
 function animateCursor() {
-    cursorX += (mouseX - cursorX) * 0.16; // 0.16 — скорость шлейфа кольца
+    cursorX += (mouseX - cursorX) * 0.16;
     cursorY += (mouseY - cursorY) * 0.16;
 
     if (cursor && window.innerWidth >= 768) {
@@ -35,15 +32,12 @@ function animateCursor() {
 }
 requestAnimationFrame(animateCursor);
 
+// Сброс при уходе мыши из окна
 document.addEventListener('mouseleave', () => {
-    if (card) {
-        card.style.transition = 'all 0.5s ease';
-        card.style.transform = 'rotateY(0deg) rotateX(0deg)';
-    }
     if (cursor) cursor.style.opacity = '0';
 });
 
-// Магнитное увеличение курсора при наведении
+// Магнитное увеличение курсора при наведении на кнопки
 const interactiveElements = document.querySelectorAll('a, button, .gallery-item');
 interactiveElements.forEach(el => {
     el.addEventListener('mouseenter', () => { if (cursor) cursor.classList.add('hovered'); });
