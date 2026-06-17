@@ -141,3 +141,8 @@ body::before {
 
 @media (max-width: 768px) { .custom-cursor { display: none !important; } }
 @media (min-width: 480px) { .card-container { padding: 48px 32px; } .profile-name { font-size: 32px; } }
+/* Фикс, чтобы браузер не красил ссылки в синий и не добавлял подчеркивание */
+a.link-item {
+    text-decoration: none !important;
+    color: inherit !important;
+}
