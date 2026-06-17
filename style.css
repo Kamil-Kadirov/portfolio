@@ -1,159 +1,363 @@
+/* ==========================================================================
+   1. ГЛОБАЛЬНЫЕ НАСТРОЙКИ И ПЕРЕМЕННЫЕ
+   ========================================================================== */
 :root {
-    --bg-color: #020204; /* Глубокий премиальный чёрный */
-    --card-bg: rgba(8, 8, 12, 0.7); /* Более тёмное и плотное стекло */
-    --card-border: rgba(255, 255, 255, 0.07);
+    --bg-main: #0a0a0c;
+    --card-bg: rgba(18, 18, 24, 0.65);
+    --border-color: rgba(255, 255, 255, 0.08);
     --text-main: #ffffff;
-    --text-muted: #8e93a3;
-    --neon-pink: #ff007f;
-    --neon-purple: #7928ca;
+    --text-muted: #8e8e9a;
     --neon-cyan: #00f2fe;
-    --accent-gradient: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-pink) 100%);
-    
-    /* Сверхбыстрый автономный стек шрифтов без обращений к Google Fonts */
-    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --font-heading: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    
-    --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    --neon-purple: #4facfe;
 }
 
-/* Скрываем дефолтную мышь на ПК для работы кастомного курсора */
-@media (hover: hover) {
-    * { cursor: none !important; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
-
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 body {
-    background-color: var(--bg-color);
-    background-image: radial-gradient(at 0% 0%, rgba(121, 40, 202, 0.1) 0px, transparent 40%), radial-gradient(at 100% 100%, rgba(0, 242, 254, 0.1) 0px, transparent 40%);
-    color: var(--text-main); font-family: var(--font-sans); min-height: 100vh;
-    display: flex; justify-content: center; align-items: center;
-    padding: calc(16px + env(safe-area-inset-top)) 12px calc(16px + env(safe-area-inset-bottom));
-    overflow-x: hidden; position: relative;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    overflow-x: hidden;
+    position: relative;
 }
 
-/* ЦИФРОВОЙ ЖУРНАЛЬНЫЙ ШУМ (GRAIN) */
-body::before {
-    content: ''; position: absolute; inset: 0; 
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://w3.org id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    opacity: 0.025; pointer-events: none; z-index: 2;
-}
-
-/* ФИКС СЕНЬОРА: ТОЧНАЯ НАСТРОЙКА КУРСОРA (МГНОВЕННЫЙ ПОЛЕТ + МЕДЛЕННЫЙ ХОВЕР) */
+/* Кастомный курсор-кольцо */
 .custom-cursor {
-    width: 18px; 
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border: 2px solid var(--neon-cyan);
-    background-color: transparent; 
     border-radius: 50%;
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    pointer-events: none; 
-    z-index: 99999; 
-    opacity: 0;
-    box-shadow: 0 0 8px rgba(0, 242, 254, 0.15);
-    
-    /* Мы полностью убрали отсюда переменную var(--transition).
-       Теперь плавно меняются ТОЛЬКО размеры и цвет (за 0.4 секунды), 
-       а перемещение (transform) не имеет никаких CSS-задержек и слушается только JS! */
-    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                background-color 0.4s ease, 
-                border-color 0.4s ease, 
-                opacity 0.2s ease, 
-                box-shadow 0.4s ease;
-    will-change: transform;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
+    display: none; /* Включается через JS, если активен */
 }
 
-/* Медленное, вальяжное расширение при наведении на кнопки */
-.custom-cursor.hovered {
-    width: 44px; 
-    height: 44px;
-    border-color: var(--neon-cyan);
-    background-color: rgba(0, 242, 254, 0.04);
-    box-shadow: 0 0 16px rgba(0, 242, 254, 0.35);
+@media (pointer: fine) {
+    .custom-cursor { display: block; }
 }
 
-/* Пульсирующие фоновые сферы бэкграунда */
-.bg-glow { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.25; z-index: 0; pointer-events: none; }
-.blob-1 { width: 350px; height: 350px; background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink)); top: -5%; left: -5%; animation: f1 12s infinite alternate ease-in-out; }
-.blob-2 { width: 400px; height: 400px; background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple)); bottom: -5%; right: -5%; animation: f2 10s infinite alternate ease-in-out; }
-@keyframes f1 { to { transform: translate(40px, 20px) scale(1.1); } }
-@keyframes f2 { to { transform: translate(-30px, -40px) scale(0.9); } }
+/* ==========================================================================
+   2. ЗАДНИЙ ФОН И СВЕЧЕНИЯ (BLOBS)
+   ========================================================================== */
+.bg-glow {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
+}
 
-/* КОМПАКТНАЯ СТРОГАЯ КАРТОЧКА */
+.blob-1 {
+    top: -10%;
+    left: -10%;
+    background: var(--neon-cyan);
+}
+
+.blob-2 {
+    bottom: -10%;
+    right: -10%;
+    background: var(--neon-purple);
+}
+
+/* ==========================================================================
+   3. ОСНОВНОЙ КОНТЕЙНЕР-КАРТОЧКА
+   ========================================================================== */
 .card-container {
-    background: var(--card-bg); border: 1px solid var(--card-border); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-    border-radius: 24px; 
-    padding: 32px 20px; 
-    width: 100%; 
-    max-width: 370px; /* Компактная ширина */
-    text-align: center; z-index: 3;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    position: relative; overflow: hidden;
-    opacity: 0; transform: scale(0.96); animation: cardIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 480px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 }
-@keyframes cardIn { to { opacity: 1; transform: scale(1); } }
 
-/* Интерактивный неоновый блик, который бегает под стеклом за мышкой */
-.card-container::before {
-    content: ''; position: absolute; inset: 0; background: radial-gradient(250px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 242, 254, 0.06), transparent 80%);
-    z-index: -1; opacity: 0; transition: opacity 0.5s ease; pointer-events: none;
+/* ==========================================================================
+   4. БЛОК ПРОФИЛЯ (АВАТАР И БИО)
+   ========================================================================== */
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 32px;
 }
-.card-container:hover::before { opacity: 1; }
 
-.profile-header { margin-bottom: 24px; }
-.avatar-wrapper { position: relative; width: 96px; height: 96px; margin: 0 auto 16px; padding: 3px; background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan)); border-radius: 50%; box-shadow: 0 0 15px rgba(255, 0, 127, 0.25); }
-.avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #08080c; }
-.status-badge { position: absolute; bottom: 1px; right: 1px; background: linear-gradient(90deg, #00ff88, #00f2fe); color: #000; font-size: 8.5px; font-weight: 800; padding: 3px 8px; border-radius: 20px; box-shadow: 0 3px 10px rgba(0, 255, 136, 0.3); }
+.avatar-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
 
-.profile-name { font-family: var(--font-heading); font-size: 26px; font-weight: 800; margin-bottom: 8px; background: linear-gradient(135deg, #ffffff 40%, var(--neon-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.profile-bio { color: var(--text-muted); font-size: 13px; line-height: 1.55; padding: 0 4px; }
+.avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+}
 
-.links-section { display: flex; flex-direction: column; gap: 10px; }
+.status-badge {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 30%);
+    background: #00e676;
+    color: #000;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 230, 118, 0.4);
+    letter-spacing: 0.5px;
+}
+
+.profile-name {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #fff 0%, var(--text-muted) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.profile-bio {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    max-width: 90%;
+}
+
+/* ==========================================================================
+   5. СЕКЦИЯ ССЫЛОК И КНОПОК
+   ========================================================================== */
+.links-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 36px;
+}
+
+/* Общие правила для всех интерактивных элементов ссылок */
+.links-section a {
+    text-decoration: none !important;
+}
+
+/* Стилизация обычных кнопок-ссылок (Behance, Instagram, TikTok) */
+.link-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 16px 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Стилизация блока Telegram (сложная кнопка с кнопкой копирования) */
 .link-item {
-    display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; 
-    background: rgba(255, 255, 255, 0.015); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 14px;
-    color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 14px; position: relative; overflow: hidden; transition: var(--transition);
-}
-.link-main-target { display: flex; justify-content: space-between; align-items: center; width: 100%; height: 100%; text-decoration: none; color: inherit; }
-.link-content { display: flex; align-items: center; gap: 12px; min-width: 0; }
-.link-content span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.icon { width: 20px; height: 20px; color: var(--neon-cyan); transition: var(--transition); flex-shrink: 0; }
-.arrow { color: var(--text-muted); transition: var(--transition); flex-shrink: 0; width: 16px; height: 16px; }
-.copy-btn { background: none; border: none; font-size: 13px; padding: 2px; margin-left: 8px; z-index: 5; transition: transform 0.2s; }
-.copy-btn:active { transform: scale(0.8); }
-
-.primary-link { background: rgba(121, 40, 202, 0.15); border: 1px solid var(--neon-purple); box-shadow: 0 4px 12px rgba(121, 40, 202, 0.1); }
-.primary-link .icon { color: var(--neon-pink); }
-
-/* Компактная галерея */
-.gallery-section { text-align: left; margin-top: 16px; border-top: 1px solid var(--card-border); padding-top: 20px; }
-.gallery-title { font-family: var(--font-heading); font-size: 14px; font-weight: 700; margin-bottom: 12px; color: #fff; letter-spacing: 0.5px; }
-.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.gallery-item { aspect-ratio: 1; border-radius: 10px; overflow: hidden; border: 1px solid var(--card-border); transition: var(--transition); }
-.gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
-
-/* Полноэкранный просмотр */
-.lightbox { position: fixed; inset: 0; background: rgba(2,2,4,0.95); backdrop-filter: blur(12px); z-index: 99999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.35s; }
-.lightbox.active { pointer-events: auto; opacity: 1; }
-.lightbox-img { max-width: 90%; max-height: 85%; border-radius: 12px; transform: scale(0.95); transition: transform 0.35s; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
-.lightbox.active .lightbox-img { transform: scale(1); }
-
-/* 3D Каскадное появление */
-.fade-in { opacity: 0; transform: perspective(500px) rotateX(-10deg) translateY(15px); filter: blur(2px); animation: elIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: calc(0.15s + (var(--i) * 0.06s)); }
-@keyframes elIn { to { opacity: 1; transform: perspective(500px) rotateX(0deg) translateY(0); filter: blur(0); } }
-
-/* Мягкие ховеры для ПК */
-@media (hover: hover) {
-    .link-item:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.04); border-color: var(--neon-cyan); box-shadow: 0 6px 15px rgba(0, 242, 254, 0.15); }
-    .link-item:hover .icon { transform: rotate(-4deg) scale(1.05); filter: drop-shadow(0 0 6px var(--neon-cyan)); }
-    .link-item:hover .arrow { color: #fff; transform: translateX(3px); }
-    .primary-link:hover { background: var(--accent-gradient); border-color: transparent; box-shadow: 0 8px 20px rgba(255, 0, 127, 0.3); }
-    .gallery-item:hover { border-color: var(--neon-cyan); }
-    .gallery-item:hover img { transform: scale(1.05); }
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-@media (max-width: 768px) { .custom-cursor { display: none !important; } }
-@media (min-width: 480px) { .card-container { padding: 36px 24px; } }
+.link-main-target {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+    padding: 16px 20px;
+}
+
+/* Эффекты наведения (Hover) */
+.link-card:hover, .link-item:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Текст и контент внутри кнопок */
+.link-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.links-section span {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-main) !important;
+}
+
+/* Иконки SVG */
+.links-section .icon {
+    width: 22px;
+    height: 22px;
+    color: var(--neon-cyan) !important;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+/* Стрелочки справа */
+.links-section .arrow {
+    color: rgba(255, 255, 255, 0.3);
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.link-card:hover .arrow, .link-item:hover .arrow {
+    transform: translateX(4px);
+    color: var(--neon-cyan);
+}
+
+/* Кнопка скопировать внутри Telegram */
+.copy-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-left: 1px solid var(--border-color);
+    padding: 0 18px;
+    align-self: stretch;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.copy-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================================================
+   6. СЕКЦИЯ МИНИ-ПОРТФОЛИО
+   ========================================================================== */
+.gallery-section {
+    border-top: 1px solid var(--border-color);
+    padding-top: 28px;
+}
+
+.gallery-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 16px;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.gallery-item {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-item:hover {
+    transform: scale(1.03);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.08);
+}
+
+/* Сломанные картинки заглушки */
+.gallery-item img[src=""], .gallery-item img:not([src]) {
+    opacity: 0.3;
+}
+
+/* ==========================================================================
+   7. МОДАЛЬНОЕ ОКНО ПРОСМОТРА (LIGHTBOX)
+   ========================================================================== */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(5, 5, 8, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.lightbox-img {
+    max-width: 90%;
+    max-height: 85%;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+.lightbox.active .lightbox-img {
+    transform: scale(1);
+}
+
+/* ==========================================================================
+   8. АНИМАЦИИ (FADE-IN)
+   ========================================================================== */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: calc(var(--i) * 0.1s);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
