@@ -145,3 +145,12 @@ a.link-item {
     text-decoration: none !important;
     color: inherit !important;
 }
+/* Адаптация всплывающего окна (lightbox) под экраны телефонов */
+@media (max-width: 480px) {
+    .lightbox-img {
+        width: 90% !important;      /* Жестко ограничиваем ширину в процентах от экрана */
+        max-width: 100% !important;
+        height: auto !important;    /* Сохраняем пропорции, чтобы картинка не сплющилась */
+        object-fit: contain;
+    }
+}
